@@ -3,11 +3,11 @@ import utils
 import sqlite3
 
 
-def login(rut, password):
+def login(usuario, clave):
     print("Verificacion de usuario")
     con = sqlite3.connect("db.sqlite3")
     cursor = con.cursor()
-    query = f"""SELECT * FROM users WHERE rut = '{rut}' AND password = '{password}' ;"""
+    query = f"""SELECT * FROM users WHERE usuario = '{usuario}' AND clave = '{clave}' ;"""
     cursor.execute(query)
     rows = cursor.fetchall()
     con.commit()
