@@ -89,53 +89,46 @@ class App:
                 w_print("Opcion no valida")
 
 
-def display_maquinarias(res):
+def display_productos(res):
     data = eval(res[12:])
-    maquinarias = [maquinaria for maquinaria in data if not maquinaria[5]]
-    if len(maquinarias) == 0:
-        f_print('No se encontraron maquinarias')
+    productos = [producto for producto in data if not producto[5]]
+    if len(productos) == 0:
+        f_print('No se encontraron productos')
         return
-    g_print('Maquinarias encontradas:')
-    for maquinaria in maquinarias:
+    g_print('Productos encontradas:')
+    for producto in productos:
         b_print('-'*20)
-        print('id', maquinaria[0])
-        print('nombre', maquinaria[1])
-        print('estado', maquinaria[2])
-        print('costo', maquinaria[3])
-        print('fecha de creacion', maquinaria[4])
+        print('SKU', producto[0])
+        print('nombre', producto[1])
+        print('precio', producto[2])
+        print('stock', producto[3])
+        print('categoria', producto[4])
 
 
-def display_componentes(res):
+def display_utencilios(res):
     data = eval(res[12:])
-    componentes = [componente for componente in data if not componente[8]]
+    utencilios = [utencilio for utencilio in data if not utencilio[8]]
     if len(data) == 0:
-        f_print('No se encontraron componentes')
+        f_print('No se encontraron utencilios')
         return
-    g_print('Componentes encontrados:')
-    for componente in componentes:
+    g_print('Utencilios encontrados:')
+    for utencilio in utencilios:
         b_print('-'*20)
-        print('id', componente[0])
-        print('id_maquinaria', componente[1])
-        print('nombre', componente[2])
-        print('estado', componente[3])
-        print('marca', componente[4])
-        print('modelo', componente[5])
-        print('costo', componente[6])
-        print('fecha de creacion', componente[7])
+        print('id', utencilio[0])
+        print('nombre', utencilio[1])
+        print('estado', utencilio[2])
+        print('costo', utencilio[3])
 
 
-def display_historial_componente(res):
+
+def display_historial_utencilio(res):
     data = eval(res[12:])
-    for componente in data:
+    for utencilio in data:
         b_print('-'*20)
-        print('id', componente[0])
-        print('id_maquinaria', componente[1])
-        print('nombre', componente[2])
-        print('estado', componente[3])
-        print('marca', componente[4])
-        print('modelo', componente[5])
-        print('costo', componente[6])
-        print('fecha de modificacion', componente[7])
+        print('id', utencilio[0])
+        print('nombre', utencilio[1])
+        print('estado', utencilio[2])
+        print('costo', utencilio[3])
 
 
 if __name__ == '__main__':
