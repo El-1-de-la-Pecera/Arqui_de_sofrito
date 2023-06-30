@@ -224,51 +224,39 @@ if __name__ == '__main__':
                 'id': 'serv6',
                 'desc': 'Registrar utensilios',
                 'user_types': [0, 1, 2],
-                'function': lambda *_: g_print('componente registrado'),
+                'function': lambda *_: g_print('utensilio registrado'),
                 'inputs': [
                     {
                         'key': 'nombre',
-                        'desc': 'Ingresa el nombre del componente: ',
+                        'desc': 'Ingresa el nombre del utensilio: ',
                     },
                     {
                         'key': 'estado',
-                        'desc': 'Ingresa el estado del componente: ',
-                    },
-                    {
-                        'key': 'marca',
-                        'desc': 'Ingresa la marca del componente: '
-                    },
-                    {
-                        'key': 'modelo',
-                        'desc': 'Ingresa el modelo del componente: '
+                        'desc': 'Ingresa el estado del utensilio: ',
                     },
                     {
                         'key': 'costo',
-                        'desc': 'Ingresa el costo del componente: '
-                    },
-                    {
-                        'key': 'id_maquinaria',
-                        'desc': 'Ingresa el id de la maquinaria: '
+                        'desc': 'Ingresa el costo del utensilio: '
                     },
                 ]
             },
             {
                 'id': 'serv7',
-                'desc': 'Consultar componentes',
+                'desc': 'Consultar utensilios',
                 'user_types': [0, 1, 2],
-                'function': display_componentes,
+                'function': display_utensilios,
                 'inputs': [
                     {
                         'key': 'id',
-                        'desc': 'Ingresa el id del componente o vacío para consultar por todas: '
+                        'desc': 'Ingresa el id del utensilio o vacío para consultar por todas: '
                     }
                 ]
             },
             {
                 'id': 'serv8',
-                'desc': 'Modificar componente',
+                'desc': 'Modificar utensilio',
                 'user_types': [0, 1, 2],
-                'function': lambda res: g_print('componente modificado') if (eval(res[12:])) > 0 else f_print('componente no encontrado'),
+                'function': lambda res: g_print('utensilio modificado') if (eval(res[12:])) > 0 else f_print('utensilio no encontrado'),
                 'inputs': [
                     {
                         'key': 'id',
@@ -276,28 +264,15 @@ if __name__ == '__main__':
                     },
                     {
                         'key': 'nombre',
-                        'desc': 'Ingresa el nuevo nombre del componente: ',
+                        'desc': 'Ingresa el nombre del utensilio: ',
                     },
                     {
                         'key': 'estado',
-                        'desc': 'Ingresa el nuevo estado del componente: ',
-
-                    },
-                    {
-                        'key': 'marca',
-                        'desc': 'Ingresa la nueva marca del componente: '
-                    },
-                    {
-                        'key': 'modelo',
-                        'desc': 'Ingresa el nuevo modelo del componente: '
+                        'desc': 'Ingresa el estado del utensilio: ',
                     },
                     {
                         'key': 'costo',
-                        'desc': 'Ingresa el nuevo costo del componente: '
-                    },
-                    {
-                        'key': 'id_maquinaria',
-                        'desc': 'Ingresa el nuevo id de la maquinaria: '
+                        'desc': 'Ingresa el costo del utensilio: '
                     },
                 ]
             },
@@ -305,11 +280,11 @@ if __name__ == '__main__':
                 'id': 'serv9',
                 'desc': 'Historial de componente',
                 'user_types': [0, 1, 2],
-                'function': display_historial_componente,
+                'function': display_historial_utensilio,
                 'inputs': [
                     {
                         'key': 'id',
-                        'desc': 'Ingresa el id del componente: '
+                        'desc': 'Ingresa el id del utensilio: '
                     }
                 ]
             }
