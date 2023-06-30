@@ -278,7 +278,7 @@ if __name__ == '__main__':
             },
             {
                 'id': 'serv9',
-                'desc': 'Historial de componente',
+                'desc': 'Historial de utensilio',
                 'user_types': [0, 1, 2],
                 'function': display_historial_utensilio,
                 'inputs': [
