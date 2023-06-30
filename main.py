@@ -105,30 +105,30 @@ def display_productos(res):
         print('categoria', producto[4])
 
 
-def display_utencilios(res):
+def display_utensilios(res):
     data = eval(res[12:])
-    utencilios = [utencilio for utencilio in data if not utencilio[8]]
+    utensilios = [utensilio for utensilio in data if not utensilio[8]]
     if len(data) == 0:
-        f_print('No se encontraron utencilios')
+        f_print('No se encontraron utensilios')
         return
     g_print('Utencilios encontrados:')
-    for utencilio in utencilios:
+    for utensilio in utensilios:
         b_print('-'*20)
-        print('id', utencilio[0])
-        print('nombre', utencilio[1])
-        print('estado', utencilio[2])
-        print('costo', utencilio[3])
+        print('id', utensilio[0])
+        print('nombre', utensilio[1])
+        print('estado', utensilio[2])
+        print('costo', utensilio[3])
 
 
 
-def display_historial_utencilio(res):
+def display_historial_utensilio(res):
     data = eval(res[12:])
-    for utencilio in data:
+    for utensilio in data:
         b_print('-'*20)
-        print('id', utencilio[0])
-        print('nombre', utencilio[1])
-        print('estado', utencilio[2])
-        print('costo', utencilio[3])
+        print('id', utensilio[0])
+        print('nombre', utensilio[1])
+        print('estado', utensilio[2])
+        print('costo', utensilio[3])
 
 
 if __name__ == '__main__':
@@ -138,87 +138,91 @@ if __name__ == '__main__':
             'desc': 'Iniciar sesión',
             'inputs': [
                 {
-                    'key': 'username',
-                    'desc': 'Ingresa tu rut: '
+                    'key': 'usuario',
+                    'desc': 'Ingresa tu usuario: '
                 },
                 {
-                    'key': 'password',
-                    'desc': 'Ingresa tu contraseña: '
+                    'key': 'clave',
+                    'desc': 'Ingresa tu clave: '
                 }
             ]
         },
         services=[
             {
                 'id': 'serv2',
-                'desc': 'Registrar maquinaria',
+                'desc': 'Registrar producto',
                 'user_types': [0, 1, 2],
-                'function': lambda *_: g_print('maquinaria registrada'),
+                'function': lambda *_: g_print('producto registrado'),
                 'inputs': [
                     {
                         'key': 'nombre',
-                        'desc': 'Ingresa el nombre de la maquinaria: ',
+                        'desc': 'Ingresa el nombre del producto: ',
                     },
                     {
-                        'key': 'estado',
-                        'desc': 'Ingresa el estado de la maquinaria: ',
+                        'key': 'precio',
+                        'desc': 'Ingresa el precio del producto: ',
                     },
                     {
-                        'key': 'costo',
-                        'desc': 'Ingresa el costo de la maquinaria: '
+                        'key': 'stock',
+                        'desc': 'Ingresa el stock del producto: '
+                    },
+                    {
+                        'key': 'categoria',
+                        'desc': 'Ingresa el categoria del producto: '
                     }
                 ]
             },
             {
                 'id': 'serv3',
-                'desc': 'Consultar maquinarias',
+                'desc': 'Consultar producto',
                 'user_types': [0, 1, 2],
-                'function': display_maquinarias,
+                'function': display_productos,
                 'inputs': [
                     {
                         'key': 'id',
-                        'desc': 'Ingresa el id de la maquinaria o vacío para consultar por todas: '
+                        'desc': 'Ingresa el id del producto o vacío para consultar por todas: '
                     }
                 ]
             },
             {
                 'id': 'serv4',
-                'desc': 'Modificar maquinaria',
+                'desc': 'Modificar producto',
                 'user_types': [0, 1, 2],
-                'function': lambda res: g_print('maquinaria modificada') if eval(res[12:]) > 0 else f_print('maquinaria no encontrada'),
+                'function': lambda res: g_print('producto modificado') if eval(res[12:]) > 0 else f_print('producto no encontrado'),
                 'inputs': [
                     {
-                        'key': 'id',
-                        'desc': 'Ingresa el id de la maquinaria: '
-                    },
-                    {
                         'key': 'nombre',
-                        'desc': 'Ingresa el nuevo nombre de la maquinaria: ',
+                        'desc': 'Ingresa el nombre del producto: ',
                     },
                     {
-                        'key': 'estado',
-                        'desc': 'Ingresa el nuevo estado de la maquinaria: ',
+                        'key': 'precio',
+                        'desc': 'Ingresa el precio del producto: ',
                     },
                     {
-                        'key': 'costo',
-                        'desc': 'Ingresa el nuevo costo de la maquinaria: '
+                        'key': 'stock',
+                        'desc': 'Ingresa el stock del producto: '
+                    },
+                    {
+                        'key': 'categoria',
+                        'desc': 'Ingresa el categoria del producto: '
                     }
                 ]
             },
             {
                 'id': 'serv5',
-                'desc': 'Eliminar maquinaria',
+                'desc': 'Eliminar producto',
                 'user_types': [0, 1, 2],
-                'function': lambda res: g_print('maquinaria eliminada') if eval(res[12:]) > 0 else f_print('maquinaria no encontrada'),
+                'function': lambda res: g_print('producto eliminado') if eval(res[12:]) > 0 else f_print('producto no encontrado'),
                 'inputs': [
                     {
                         'key': 'id',
-                        'desc': 'Ingresa el id de la maquinaria: '
+                        'desc': 'Ingresa el id del producto: '
                     }
                 ]
             },
             {
                 'id': 'serv6',
-                'desc': 'Registrar componente',
+                'desc': 'Registrar utensilios',
                 'user_types': [0, 1, 2],
                 'function': lambda *_: g_print('componente registrado'),
                 'inputs': [
