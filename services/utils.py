@@ -4,28 +4,20 @@ import os
 
 def str_bus_format(data, service_name=''):
     total_digits = 5
-
     transformed_data = str(data)
-
     transformed_data_len = len(transformed_data)
-
     digits_left = total_digits - len(str(transformed_data_len))
-
     str_data_lenght = ''
-
     for i in range(digits_left):
         str_data_lenght += '0'
-
     str_data_lenght += str(transformed_data_len) + \
         service_name+transformed_data
-
     return str_data_lenght
 
 
 def create_tables():
     conn = sqlite3.connect('db.sqlite3')
     c = conn.cursor()
-
     c.execute(
         '''CREATE TABLE IF NOT EXISTS users
             (
@@ -40,12 +32,11 @@ def create_tables():
     c.execute(
         '''CREATE TABLE IF NOT EXISTS productos
             (
-                id integer PRIMARY KEY AUTOINCREMENT,
+                SKU text PRIMARY KEY AUTOINCREMENT,
                 nombre text,
-                estado text,
                 precio integer,
-                fecha_ingreso datetime DEFAULT CURRENT_DATE,
-                fecha_salida datetime
+                stock integer,
+                categoria text
             )
         '''
     )
@@ -54,15 +45,9 @@ def create_tables():
         '''CREATE TABLE IF NOT EXISTS utensilios
             (
                 id integer PRIMARY KEY AUTOINCREMENT,
-                id_producto integer,
                 nombre text,
                 estado text,
-                marca text,
-                modelo text,
-                costo integer,
-                fecha_ingreso datetime DEFAULT CURRENT_DATE,
-                fecha_salida datetime,
-                FOREIGN KEY (id_producto) REFERENCES productos (id)
+                costo integer
             )
         '''
     )
@@ -72,17 +57,11 @@ def create_tables():
             (
                 id integer PRIMARY KEY AUTOINCREMENT,
                 id_utensilios integer,
-                id_producto integer,
                 nombre text,
                 estado text,
-                marca text,
-                modelo text,
                 costo integer,
-                fecha_ingreso datetime,
-                fecha_salida datetime,
                 fecha_modificacion datetime DEFAULT CURRENT_DATE,
                 FOREIGN KEY (id_utensilios) REFERENCES utensilios (id),
-                FOREIGN KEY (id_producto) REFERENCES productos (id)
             )
         '''
     )
@@ -94,25 +73,15 @@ def create_tables():
                 INSERT INTO historial_utensilios 
                 (
                     id_utensilios, 
-                    id_producto, 
                     nombre, 
                     estado, 
-                    marca, 
-                    modelo, 
-                    costo, 
-                    fecha_ingreso, 
-                    fecha_salida                    
+                    costo
                 )
                 VALUES (
                     OLD.id, 
-                    OLD.id_producto, 
                     OLD.nombre, 
                     OLD.estado, 
-                    OLD.marca,
-                    OLD.modelo, 
-                    OLD.costo, 
-                    OLD.fecha_ingreso, 
-                    OLD.fecha_salida
+                    OLD.costo
                 );
             END
         '''
@@ -122,9 +91,8 @@ def create_tables():
         '''CREATE TRIGGER IF NOT EXISTS insert_utensilios
             AFTER INSERT ON utensilios
             BEGIN
-                INSERT INTO historial_utensilios (id_utensilios, id_producto, nombre, estado, marca, modelo, costo, fecha_ingreso, fecha_salida)
-                VALUES (NEW.id, NEW.id_producto, NEW.nombre, NEW.estado, NEW.marca,
-                        NEW.modelo, NEW.costo, NEW.fecha_ingreso, NEW.fecha_salida);
+                INSERT INTO historial_utensilios (id_utensilios, nombre, estado, costo)
+                VALUES (NEW.id, NEW.nombre, NEW.estado, NEW.costo );
             END
         '''
     )
@@ -132,13 +100,11 @@ def create_tables():
     c.execute(
         '''CREATE TABLE IF NOT EXISTS historial_productos
             (
-                id integer PRIMARY KEY AUTOINCREMENT,
-                id_producto integer,
+                SKU text PRIMARY KEY,
                 nombre text,
-                estado text,
                 precio integer,
-                fecha_ingreso datetime,
-                fecha_salida datetime,
+                stock integer,
+                categoria text,
                 fecha_modificacion datetime DEFAULT CURRENT_DATE,
                 FOREIGN KEY (id_producto) REFERENCES productos (id)
             )'''
@@ -148,9 +114,8 @@ def create_tables():
         '''CREATE TRIGGER IF NOT EXISTS update_producto
             AFTER UPDATE ON productos
             BEGIN
-                INSERT INTO historial_productos (id_producto, nombre, estado, precio, fecha_ingreso, fecha_salida)
-                VALUES (OLD.id, OLD.nombre, OLD.estado, OLD.precio,
-                        OLD.fecha_ingreso, OLD.fecha_salida);
+                INSERT INTO historial_productos (SKU, nombre, precio, stock, categoria)
+                VALUES (OLD.SKU, OLD.nombre, OLD.precio, OLD.stock, OLD.categoria);
             END
         '''
     )
@@ -159,9 +124,8 @@ def create_tables():
         '''CREATE TRIGGER IF NOT EXISTS insert_producto
             AFTER INSERT ON productos
             BEGIN
-                INSERT INTO historial_productos (id_producto, nombre, estado, precio, fecha_ingreso, fecha_salida)
-                VALUES (NEW.id, NEW.nombre, NEW.estado, NEW.precio,
-                        NEW.fecha_ingreso, NEW.fecha_salida);
+                INSERT INTO historial_productos (SKU, nombre, precio, stock, categoria)
+                VALUES (NEW.SKU, NEW.nombre, NEW.precio, NEW.stock,NEW.cateogria);
             END
         '''
     )
