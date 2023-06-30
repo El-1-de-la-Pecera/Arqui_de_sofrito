@@ -29,9 +29,8 @@ def create_tables():
     c.execute(
         '''CREATE TABLE IF NOT EXISTS users
             (
-                rut text PRIMARY KEY,
+                ID integer AUTOINCREMENT PRIMARY KEY,
                 user text,
-                name text,
                 password text,
                 type integer DEFAULT 0
             )
@@ -178,13 +177,13 @@ def remove_db():
         pass
 
 
-def insert_user(email, name, password, rut, type):
+def insert_user(email, password,  type):
     conn = sqlite3.connect('db.sqlite3')
     c = conn.cursor()
 
     c.execute(
-        '''INSERT INTO users(email, name, password, rut, type) VALUES(?, ?, ?, ?, ?)''',
-        (email, name, password, rut, type)
+        '''INSERT INTO users(email, password,  type) VALUES(?, ?, ?, ?, ?)''',
+        (email,  password,  type)
     )
 
     conn.commit()
