@@ -30,7 +30,7 @@ def create_tables():
         '''CREATE TABLE IF NOT EXISTS users
             (
                 ID integer AUTOINCREMENT PRIMARY KEY,
-                usurario text,
+                usuario text,
                 clave text,
                 tipo integer DEFAULT 0
             )
@@ -43,7 +43,7 @@ def create_tables():
                 id integer PRIMARY KEY AUTOINCREMENT,
                 nombre text,
                 estado text,
-                costo integer,
+                precio integer,
                 fecha_ingreso datetime DEFAULT CURRENT_DATE,
                 fecha_salida datetime
             )
@@ -136,7 +136,7 @@ def create_tables():
                 id_producto integer,
                 nombre text,
                 estado text,
-                costo integer,
+                precio integer,
                 fecha_ingreso datetime,
                 fecha_salida datetime,
                 fecha_modificacion datetime DEFAULT CURRENT_DATE,
@@ -148,8 +148,8 @@ def create_tables():
         '''CREATE TRIGGER IF NOT EXISTS update_producto
             AFTER UPDATE ON productos
             BEGIN
-                INSERT INTO historial_productos (id_producto, nombre, estado, costo, fecha_ingreso, fecha_salida)
-                VALUES (OLD.id, OLD.nombre, OLD.estado, OLD.costo,
+                INSERT INTO historial_productos (id_producto, nombre, estado, precio, fecha_ingreso, fecha_salida)
+                VALUES (OLD.id, OLD.nombre, OLD.estado, OLD.precio,
                         OLD.fecha_ingreso, OLD.fecha_salida);
             END
         '''
@@ -159,8 +159,8 @@ def create_tables():
         '''CREATE TRIGGER IF NOT EXISTS insert_producto
             AFTER INSERT ON productos
             BEGIN
-                INSERT INTO historial_productos (id_producto, nombre, estado, costo, fecha_ingreso, fecha_salida)
-                VALUES (NEW.id, NEW.nombre, NEW.estado, NEW.costo,
+                INSERT INTO historial_productos (id_producto, nombre, estado, precio, fecha_ingreso, fecha_salida)
+                VALUES (NEW.id, NEW.nombre, NEW.estado, NEW.precio,
                         NEW.fecha_ingreso, NEW.fecha_salida);
             END
         '''
@@ -177,7 +177,7 @@ def remove_db():
         pass
 
 
-def insert_user(usuario, clave,  tipo):
+def insert_usuario(usuario, clave,  tipo):
     conn = sqlite3.connect('db.sqlite3')
     c = conn.cursor()
 
@@ -190,13 +190,13 @@ def insert_user(usuario, clave,  tipo):
     conn.close()
 
 
-def insert_producto(nombre, estado, costo):
+def insert_producto(nombre, estado, precio):
     conn = sqlite3.connect('db.sqlite3')
     c = conn.cursor()
 
     c.execute(
-        '''INSERT INTO productos(nombre, estado, costo) VALUES(?, ?, ?)''',
-        (nombre, estado, costo)
+        '''INSERT INTO productos(nombre, estado, precio) VALUES(?, ?, ?)''',
+        (nombre, estado, precio)
     )
 
     conn.commit()
@@ -217,13 +217,13 @@ def consulta_producto(id_producto=''):
     return res
 
 
-def update_producto(id_producto, nombre, estado, costo):
+def update_producto(id_producto, nombre, estado, precio):
     conn = sqlite3.connect('db.sqlite3')
     c = conn.cursor()
 
     c.execute(
-        '''UPDATE productos SET nombre= ?, estado= ?, costo= ? WHERE id= ?''',
-        (nombre, estado, costo, id_producto)
+        '''UPDATE productos SET nombre= ?, estado= ?, precio= ? WHERE id= ?''',
+        (nombre, estado, precio, id_producto)
     )
 
     conn.commit()
@@ -361,7 +361,7 @@ def u_print(*text):
 if __name__ == '__main__':
     remove_db()
     create_tables()
-    insert_user('admin@email.com', 'admin', 'admin',
+    insert_usuario('admin@email.com', 'admin', 'admin',
                 '12345678-9', 0)  # admin (tipo 0)
     insert_producto('producto1', 'nuevo', 100)
     insert_producto('producto2', 'casi nuevo', 200)
