@@ -30,9 +30,9 @@ def create_tables():
         '''CREATE TABLE IF NOT EXISTS users
             (
                 ID integer AUTOINCREMENT PRIMARY KEY,
-                user text,
-                password text,
-                type integer DEFAULT 0
+                usurario text,
+                clave text,
+                tipo integer DEFAULT 0
             )
             '''
     )
@@ -51,7 +51,7 @@ def create_tables():
     )
 
     c.execute(
-        '''CREATE TABLE IF NOT EXISTS utencilios
+        '''CREATE TABLE IF NOT EXISTS utensilios
             (
                 id integer PRIMARY KEY AUTOINCREMENT,
                 id_producto integer,
@@ -68,10 +68,10 @@ def create_tables():
     )
 
     c.execute(
-        '''CREATE TABLE IF NOT EXISTS historial_utencilios
+        '''CREATE TABLE IF NOT EXISTS historial_utensilios
             (
                 id integer PRIMARY KEY AUTOINCREMENT,
-                id_utencilios integer,
+                id_utensilios integer,
                 id_producto integer,
                 nombre text,
                 estado text,
@@ -81,19 +81,19 @@ def create_tables():
                 fecha_ingreso datetime,
                 fecha_salida datetime,
                 fecha_modificacion datetime DEFAULT CURRENT_DATE,
-                FOREIGN KEY (id_utencilios) REFERENCES utencilios (id),
+                FOREIGN KEY (id_utensilios) REFERENCES utensilios (id),
                 FOREIGN KEY (id_producto) REFERENCES productos (id)
             )
         '''
     )
 
     c.execute(
-        '''CREATE TRIGGER IF NOT EXISTS update_utencilios
-            AFTER UPDATE ON utencilios
+        '''CREATE TRIGGER IF NOT EXISTS update_utensilios
+            AFTER UPDATE ON utensilios
             BEGIN
-                INSERT INTO historial_utencilios 
+                INSERT INTO historial_utensilios 
                 (
-                    id_utencilios, 
+                    id_utensilios, 
                     id_producto, 
                     nombre, 
                     estado, 
@@ -119,10 +119,10 @@ def create_tables():
     )
 
     c.execute(
-        '''CREATE TRIGGER IF NOT EXISTS insert_utencilios
-            AFTER INSERT ON utencilios
+        '''CREATE TRIGGER IF NOT EXISTS insert_utensilios
+            AFTER INSERT ON utensilios
             BEGIN
-                INSERT INTO historial_utencilios (id_utencilios, id_producto, nombre, estado, marca, modelo, costo, fecha_ingreso, fecha_salida)
+                INSERT INTO historial_utensilios (id_utensilios, id_producto, nombre, estado, marca, modelo, costo, fecha_ingreso, fecha_salida)
                 VALUES (NEW.id, NEW.id_producto, NEW.nombre, NEW.estado, NEW.marca,
                         NEW.modelo, NEW.costo, NEW.fecha_ingreso, NEW.fecha_salida);
             END
@@ -177,13 +177,13 @@ def remove_db():
         pass
 
 
-def insert_user(email, password,  type):
+def insert_user(usuario, clave,  tipo):
     conn = sqlite3.connect('db.sqlite3')
     c = conn.cursor()
 
     c.execute(
-        '''INSERT INTO users(email, password,  type) VALUES(?, ?, ?, ?, ?)''',
-        (email,  password,  type)
+        '''INSERT INTO users(usuario, clave,  tipo) VALUES(?, ?, ?, ?, ?)''',
+        (usuario,  clave,  tipo)
     )
 
     conn.commit()
@@ -245,12 +245,12 @@ def delete_producto(id_producto):
     return c.rowcount
 
 
-def insert_utencilios(id_producto, nombre, estado, marca, modelo, costo):
+def insert_utensilios(id_producto, nombre, estado, marca, modelo, costo):
     conn = sqlite3.connect('db.sqlite3')
     c = conn.cursor()
 
     c.execute(
-        '''INSERT INTO utencilios(id_producto, nombre, estado, marca, modelo, costo) VALUES(?, ?, ?, ?, ?, ?)''',
+        '''INSERT INTO utensilios(id_producto, nombre, estado, marca, modelo, costo) VALUES(?, ?, ?, ?, ?, ?)''',
         (id_producto, nombre, estado, marca, modelo, costo)
     )
 
@@ -259,34 +259,34 @@ def insert_utencilios(id_producto, nombre, estado, marca, modelo, costo):
     return c.rowcount
 
 
-def consulta_utencilios(id_utencilios=''):
+def consulta_utensilios(id_utensilios=''):
     conn = sqlite3.connect('db.sqlite3')
     c = conn.cursor()
-    if id_utencilios == '':
-        c.execute('''SELECT * FROM utencilios''')
+    if id_utensilios == '':
+        c.execute('''SELECT * FROM utensilios''')
     else:
         c.execute(
-            '''SELECT * FROM utencilios WHERE id= ?''', (id_utencilios,))
+            '''SELECT * FROM utensilios WHERE id= ?''', (id_utensilios,))
     res = c.fetchall()
     conn.commit()
     conn.close()
     return res
 
 
-def consulta_historial_utencilios(id_utencilios=''):
+def consulta_historial_utensilios(id_utensilios=''):
     conn = sqlite3.connect('db.sqlite3')
     c = conn.cursor()
-    print(id_utencilios)
+    print(id_utensilios)
     c.execute(
-        '''SELECT * FROM historial_utencilios WHERE id_utencilios= ?''', (id_utencilios,))
+        '''SELECT * FROM historial_utensilios WHERE id_utensilios= ?''', (id_utensilios,))
     res = c.fetchall()
     conn.commit()
     conn.close()
     return res
 
 
-def update_utencilios(
-    id_utencilios,
+def update_utensilios(
+    id_utensilios,
     id_producto,
     nombre,
     estado,
@@ -298,7 +298,7 @@ def update_utencilios(
     c = conn.cursor()
 
     c.execute(
-        '''UPDATE utencilios
+        '''UPDATE utensilios
         SET id_producto= ?,
             nombre= ?,
             estado= ?,
@@ -313,7 +313,7 @@ def update_utencilios(
             marca,
             modelo,
             costo,
-            id_utencilios
+            id_utensilios
         )
     )
 
@@ -362,13 +362,13 @@ if __name__ == '__main__':
     remove_db()
     create_tables()
     insert_user('admin@email.com', 'admin', 'admin',
-                '12345678-9', 0)  # admin (type 0)
+                '12345678-9', 0)  # admin (tipo 0)
     insert_producto('producto1', 'nuevo', 100)
     insert_producto('producto2', 'casi nuevo', 200)
     insert_producto('producto3', 'usado', 50)
-    insert_utencilios(1, 'utencilios2', 'nuevo', 'marca2', 'modelo2', 20)
-    insert_utencilios(1, 'utencilios3', 'nuevo', 'marca3', 'modelo3', 30)
-    insert_utencilios(2, 'utencilios4', 'nuevo', 'marca4', 'modelo4', 40)
-    insert_utencilios(2, 'utencilios5', 'nuevo', 'marca5', 'modelo5', 50)
-    insert_utencilios(2, 'utencilios6', 'nuevo', 'marca6', 'modelo6', 60)
-    insert_utencilios(3, 'utencilios7', 'nuevo', 'marca7', 'modelo7', 70)
+    insert_utensilios(1, 'utensilios2', 'nuevo', 'marca2', 'modelo2', 20)
+    insert_utensilios(1, 'utensilios3', 'nuevo', 'marca3', 'modelo3', 30)
+    insert_utensilios(2, 'utensilios4', 'nuevo', 'marca4', 'modelo4', 40)
+    insert_utensilios(2, 'utensilios5', 'nuevo', 'marca5', 'modelo5', 50)
+    insert_utensilios(2, 'utensilios6', 'nuevo', 'marca6', 'modelo6', 60)
+    insert_utensilios(3, 'utensilios7', 'nuevo', 'marca7', 'modelo7', 70)
