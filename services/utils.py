@@ -141,12 +141,12 @@ def remove_db():
         pass
 
 
-def insert_usuario(usuario, clave,  tipo):
+def insert_usuario(usuario,  clave,  tipo):
     conn = sqlite3.connect('db.sqlite3')
     c = conn.cursor()
 
     c.execute(
-        '''INSERT INTO users(usuario, clave,  tipo) VALUES(?, ?, ?, ?, ?)''',
+        '''INSERT INTO users(usuario, clave,  tipo) VALUES(?, ?, ?,)''',
         (usuario,  clave,  tipo)
     )
 
@@ -154,40 +154,40 @@ def insert_usuario(usuario, clave,  tipo):
     conn.close()
 
 
-def insert_producto(nombre, estado, precio):
+def insert_producto(SKU, nombre, precio, stock, categoria):
     conn = sqlite3.connect('db.sqlite3')
     c = conn.cursor()
 
     c.execute(
-        '''INSERT INTO productos(nombre, estado, precio) VALUES(?, ?, ?)''',
-        (nombre, estado, precio)
+        '''INSERT INTO productos(SKU, nombre, precio, stock, categoria) VALUES(?, ?,? ,?, ?)''',
+        (SKU, nombre, precio, stock, categoria)
     )
 
     conn.commit()
     conn.close()
 
 
-def consulta_producto(id_producto=''):
+def consulta_producto(SKU=''):
     conn = sqlite3.connect('db.sqlite3')
     c = conn.cursor()
-    if id_producto == '':
+    if SKU == '':
         c.execute('''SELECT * FROM productos''')
     else:
         c.execute(
-            '''SELECT * FROM productos WHERE id= ?''', (id_producto,))
+            '''SELECT * FROM productos WHERE SKU= ?''', (SKU,))
     res = c.fetchall()
     conn.commit()
     conn.close()
     return res
 
 
-def update_producto(id_producto, nombre, estado, precio):
+def update_producto(SKU,  nombre, precio, stock, categoria):
     conn = sqlite3.connect('db.sqlite3')
     c = conn.cursor()
 
     c.execute(
-        '''UPDATE productos SET nombre= ?, estado= ?, precio= ? WHERE id= ?''',
-        (nombre, estado, precio, id_producto)
+        '''UPDATE productos SET nombre= ?, precio= ?, stock= ?, categoria=? WHERE id= ?''',
+        ( nombre, precio, stock, categoria, SKU)
     )
 
     conn.commit()
@@ -195,13 +195,13 @@ def update_producto(id_producto, nombre, estado, precio):
     return c.rowcount
 
 
-def delete_producto(id_producto):
+def delete_producto(SKU):
     conn = sqlite3.connect('db.sqlite3')
     c = conn.cursor()
 
     c.execute(
-        '''UPDATE productos SET fecha_salida=CURRENT_DATE WHERE id= ?''',
-        (id_producto)
+        '''UPDATE productos WHERE SKU= ?''',
+        (SKU)
     )
 
     conn.commit()
@@ -209,13 +209,13 @@ def delete_producto(id_producto):
     return c.rowcount
 
 
-def insert_utensilios(id_producto, nombre, estado, marca, modelo, costo):
+def insert_utensilios(nombre, estado, costo):
     conn = sqlite3.connect('db.sqlite3')
     c = conn.cursor()
 
     c.execute(
-        '''INSERT INTO utensilios(id_producto, nombre, estado, marca, modelo, costo) VALUES(?, ?, ?, ?, ?, ?)''',
-        (id_producto, nombre, estado, marca, modelo, costo)
+        '''INSERT INTO utensilios( nombre, estado, costo) VALUES(?, ?, ?)''',
+        ( nombre, estado, costo)
     )
 
     conn.commit()
@@ -251,11 +251,8 @@ def consulta_historial_utensilios(id_utensilios=''):
 
 def update_utensilios(
     id_utensilios,
-    id_producto,
     nombre,
     estado,
-    marca,
-    modelo,
     costo
 ):
     conn = sqlite3.connect('db.sqlite3')
@@ -263,19 +260,13 @@ def update_utensilios(
 
     c.execute(
         '''UPDATE utensilios
-        SET id_producto= ?,
-            nombre= ?,
+        SET nombre= ?,
             estado= ?,
-            marca= ?,
-            modelo= ?,
             costo= ?
         WHERE id= ?''',
         (
-            id_producto,
             nombre,
             estado,
-            marca,
-            modelo,
             costo,
             id_utensilios
         )
@@ -325,14 +316,14 @@ def u_print(*text):
 if __name__ == '__main__':
     remove_db()
     create_tables()
-    insert_usuario('admin@email.com', 'admin', 'admin',
-                '12345678-9', 0)  # admin (tipo 0)
-    insert_producto('producto1', 'nuevo', 100)
-    insert_producto('producto2', 'casi nuevo', 200)
-    insert_producto('producto3', 'usado', 50)
-    insert_utensilios(1, 'utensilios2', 'nuevo', 'marca2', 'modelo2', 20)
-    insert_utensilios(1, 'utensilios3', 'nuevo', 'marca3', 'modelo3', 30)
-    insert_utensilios(2, 'utensilios4', 'nuevo', 'marca4', 'modelo4', 40)
-    insert_utensilios(2, 'utensilios5', 'nuevo', 'marca5', 'modelo5', 50)
-    insert_utensilios(2, 'utensilios6', 'nuevo', 'marca6', 'modelo6', 60)
-    insert_utensilios(3, 'utensilios7', 'nuevo', 'marca7', 'modelo7', 70)
+    insert_usuario( 'admin', 'admin', 0)  # admin (tipo 0)
+    insert_producto('AIDNSFV', 'producto1', 100, 54, 'categoria1')
+    insert_producto('AIDNSFV2', 'producto2', 200, 54, 'categoria2')
+    insert_producto('AIDNSFV3', 'producto3', 300, 54, 'categoria3')
+    insert_producto('AIDNSFV4', 'producto4', 400, 54, 'categoria4')
+    insert_utensilios('utensilios2', 'nuevo',  20)
+    insert_utensilios( 'utensilios3', 'usado', 30)
+    insert_utensilios( 'utensilios4', 'nuevo', 40)
+    insert_utensilios( 'utensilios5', 'nuevo',  50)
+    insert_utensilios( 'utensilios6', 'nuevo',  60)
+    insert_utensilios('utensilios7', 'nuevo',  70)
